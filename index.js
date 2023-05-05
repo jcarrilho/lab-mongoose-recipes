@@ -5,7 +5,7 @@ const Recipe = require('./models/Recipe.model');
 // Import of the data from './data.json'
 const data = require('./data');
 
-const MONGODB_URI = 'mongodb://localhost:27017/recipe-app';
+const MONGODB_URI = "mongodb://127.0.0.1:27017/recipe-app"
 
 //Method 1 : Using Async Await
 
@@ -17,6 +17,32 @@ const manageRecipes = async () => {
 
     // Before adding any recipes to the database, let's remove all existing ones
     await Recipe.deleteMany();
+
+    // Create new recipe:
+
+    const newRecipe = {
+      title: 'Chocolate Cake',
+      level: 'Easy Peasy',
+      ingredients: ['flour', 'sugar', 'cocoa powder', 'baking powder'],
+      cuisine: 'International',
+      dishType: 'dessert',
+    };
+
+    const recipe = await Recipe.create(newRecipe);
+    console.log(recipe.title);
+
+    await Recipe.insertMany(data);
+    
+
+    //Find by Id and update duration'
+
+    let rigatoni = await Recipe.findOneAndUpdate ({title:"Rigatoni alla Genovese"}, {duration: 100});
+
+    console.log(rigatoni);
+
+    await Recipe.deleteOne({title:'Carrot Cake'});
+
+    mongoose.connection.close(function() {console.log('Mongoose connection closed')});
 
     // Run your code here, after you have insured that the connection was made
   } catch (error) {
